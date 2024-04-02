@@ -1,36 +1,28 @@
 const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
-var employerSchema = new mongoose.Schema({
-    code: {
+var blogSchema = new mongoose.Schema({
+    name: {
         type: String,
         required: true,
         unique: true,
+        index: true,
     },
     email: {
         type: String,
         required: true,
         unique: true,
     },
-    phone: {
+    mobile: {
         type: String,
-    },
-    position: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Suite'
-    },
-    role: {
-        type: String,
-        default: 'manage'
+        required: true,
+        unique: true,
     },
     password: {
         type: String,
         required: true,
     },
-},
-    {
-        timestamps: true
-    });
+});
 
 //Export the model
-module.exports = mongoose.model('Employer', employerSchema);
+module.exports = mongoose.model('Blog', blogSchema);

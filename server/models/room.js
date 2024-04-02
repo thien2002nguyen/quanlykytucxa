@@ -2,16 +2,11 @@ const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
 var roomSchema = new mongoose.Schema({
-    students: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User',
-    }
-    ,
-    roomNumber: {
-        type: String,
+    numberRoom: {
+        type: Number,
         required: true,
     },
-    quantity: {
+    numberPeople: {
         type: Number,
         required: true,
     },
@@ -19,14 +14,25 @@ var roomSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    suite: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Suite',
+    thumb: {
+        filename: String,
+        path: String
     },
-    bill: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Bill',
-    }
+    images: [
+        {
+            filename: String,
+            path: String
+        }
+    ],
+    description: {
+        type: String,
+    },
+    users: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'User',
+        }
+    ],
 },
     {
         timestamps: true,

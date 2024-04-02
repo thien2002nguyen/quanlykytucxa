@@ -1,9 +1,8 @@
 const mongoose = require('mongoose'); // Erase if already required
 const bcrypt = require('bcrypt')
-const crypto = require('crypto')
 // Declare the Schema of the Mongo model
-var studentSchema = new mongoose.Schema({
-    code: {
+var userSchema = new mongoose.Schema({
+    userId: {
         type: String,
         require: true,
         unique: true,
@@ -13,12 +12,11 @@ var studentSchema = new mongoose.Schema({
         required: true,
     },
     birthday: {
-        type: Date,
+        type: String,
         required: true,
     },
     address: {
         type: String,
-        required: true,
     },
     classStudy: {
         type: String,
@@ -27,42 +25,33 @@ var studentSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
+    },
+    phone: {
+        type: String,
+        required: true,
     },
     password: {
         type: String,
         required: true,
     },
-    phone: {
-        type: String,
-    },
-    role: {
-        type: String,
-        default: 'student',
+    avatar: {
+        filename: String,
+        path: String
     },
     isBlocked: {
         type: Boolean,
         default: false,
     },
-    room: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Room',
-    },
-    checkOutDate: {
-        type: Date,
-    },
-    checkInDate: {
-        type: Date,
-    },
-    refreshToken: {
+    role: {
         type: String,
-    },
+        default: 'user'
+    }
 },
     {
         timestamps: true,
     });
 
-studentSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         next()
     }
@@ -70,17 +59,11 @@ studentSchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, salt)
 })
 
-studentSchema.methods = {
+userSchema.methods = {
     isCorrectPassword: async function (password) {
         return await bcrypt.compare(password, this.password)
-    },
-    createPasswordChangedToken: function () {
-        const resetToken = crypto.randomBytes(32).toString('hex')
-        this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
-        this.passwordResetExpires = Date.now() + 15 * 60 * 1000
-        return resetToken
     }
 }
 
 //Export the model
-module.exports = mongoose.model('Student', studentSchema);
+module.exports = mongoose.model('User', userSchema);

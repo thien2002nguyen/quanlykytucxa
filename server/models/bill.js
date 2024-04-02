@@ -2,18 +2,18 @@ const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
 var billSchema = new mongoose.Schema({
-    type: {
-        type: String,
-        required: true,
-    },
-    price: {
-        type: String,
-        required: true,
-    },
-    students: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Student'
-    }
+    info: [
+        {
+            title: String,
+            price: Number,
+        }
+    ],
+    paid: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Room',
+        }
+    ]
 },
     {
         timestamps: true,
