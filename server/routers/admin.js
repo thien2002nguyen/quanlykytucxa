@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const ctrls = require('../controllers/admin')
 
-router.post('/', ctrls.createAdmin)
+router.post('/manage', ctrls.createAdmin)
 
 module.exports = router

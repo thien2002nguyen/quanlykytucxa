@@ -1,23 +1,6 @@
 const User = require('../models/user')
-const Room = require('../models/room')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
-
-const createUser = asyncHandler(async (req, res) => {
-    const { userId, name, brithday, address, classStudy, email } = req.body
-    if (!userId, !name, !brithday, !address, !classStudy, !email) {
-        throw new Error('Missing Inputs')
-    }
-    const rs = User.findOne({ userId })
-    if (!rs) {
-        throw new Error("UserId already exists")
-    }
-    const response = await User.create(req.body)
-    return res.status(200).json({
-        success: response ? true : false,
-        mes: response ? 'Created user' : 'Somethings went wrong'
-    })
-})
 
 const getCurrent = asyncHandler(async (req, res) => {
     const { _id } = req.user
@@ -26,7 +9,7 @@ const getCurrent = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success: user ? true : false,
         user: user ? user : 'User not found',
-        room: user && room
+        room: room ? room : 'Room not found'
     })
 })
 
@@ -60,6 +43,40 @@ const updateUser = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success: response ? true : false,
         mes: response ? response : 'Something went wrong'
+    })
+})
+
+const registerForRoom = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const { rid } = req.params
+    if (!_id || !rid) {
+        throw new Error('Missing input')
+    }
+    const findUser = await User.findById(_id)
+    if (findUser.roomId) {
+        throw new Error('The user has registered for the room')
+    }
+    const response = await User.findByIdAndUpdate(_id,
+        { $push: { roomId: rid } }, { new: true })
+    return res.status(200).json({
+        success: response ? true : false,
+        mes: response ? response : 'Something went wrong'
+    })
+})
+
+const createUser = asyncHandler(async (req, res) => {
+    const { userId, name, brithday, address, classStudy, email } = req.body
+    if (!userId, !name, !brithday, !address, !classStudy, !email) {
+        throw new Error('Missing Inputs')
+    }
+    const rs = User.findOne({ userId })
+    if (!rs) {
+        throw new Error("UserId already exists")
+    }
+    const response = await User.create(req.body)
+    return res.status(200).json({
+        success: response ? true : false,
+        mes: response ? 'Created user' : 'Somethings went wrong'
     })
 })
 
@@ -97,28 +114,6 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success: response ? true : false,
         mes: response ? response : 'Something went wrong'
-    })
-})
-
-const registerForRoom = asyncHandler(async (req, res) => {
-    const { _id } = req.user
-    const { rid } = req.params
-    if (!_id || !rid) {
-        throw new Error('Missing input')
-    }
-    const findUser = await User.findById(_id)
-    if (!findUser) {
-        throw new Error('Room registration failed')
-    }
-    const isCheckUser = await Room.findOne({ users: _id })
-    if (isCheckUser) {
-        throw new Error('You have already registered your room')
-    }
-    const response = await Room.findByIdAndUpdate(rid,
-        { $push: { users: _id } }, { new: true })
-    return res.status(200).json({
-        success: response ? true : false,
-        mes: response ? response : 'Room not found'
     })
 })
 

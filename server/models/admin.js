@@ -3,11 +3,11 @@ const bcrypt = require('bcrypt')
 
 // Declare the Schema of the Mongo model
 var adminSchema = new mongoose.Schema({
-    name: {
+    email: {
         type: String,
         required: true,
     },
-    email: {
+    name: {
         type: String,
         required: true,
     },
@@ -15,10 +15,6 @@ var adminSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    role: {
-        type: String,
-        default: 'admin'
-    }
 },
     {
         timestamps: true

@@ -5,7 +5,6 @@ var userSchema = new mongoose.Schema({
     userId: {
         type: String,
         require: true,
-        unique: true,
     },
     name: {
         type: String,
@@ -42,9 +41,9 @@ var userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    role: {
-        type: String,
-        default: 'user'
+    roomId: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Room',
     }
 },
     {

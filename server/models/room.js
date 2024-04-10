@@ -2,15 +2,11 @@ const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
 var roomSchema = new mongoose.Schema({
-    numberRoom: {
+    max_people: {
         type: Number,
         required: true,
     },
-    numberPeople: {
-        type: Number,
-        required: true,
-    },
-    price: {
+    roomprice: {
         type: Number,
         required: true,
     },
@@ -27,12 +23,6 @@ var roomSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    users: [
-        {
-            type: mongoose.Types.ObjectId,
-            ref: 'User',
-        }
-    ],
 },
     {
         timestamps: true,

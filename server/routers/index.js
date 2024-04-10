@@ -2,6 +2,7 @@ const userRouter = require('./user')
 const accountRouter = require('./account')
 const adminRouter = require('./admin')
 const roomRouter = require('./room')
+const insertRouter = require('./insert')
 const { notFound, errHandler } = require('../middlewares/errHandler')
 
 const initRouter = (app) => {
@@ -9,6 +10,7 @@ const initRouter = (app) => {
     app.use('/api/account', accountRouter)
     app.use('/api/admin', adminRouter)
     app.use('/api/room', roomRouter)
+    app.use('/api/insert', insertRouter)
     app.use(notFound)
     app.use(errHandler)
 }
