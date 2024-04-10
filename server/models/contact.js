@@ -12,7 +12,8 @@ var contactSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        required: true,
+        default: 'Processing',
+        enum: ['Processing', 'Success']
     },
     user_userId: {
         type: mongoose.Types.ObjectId,

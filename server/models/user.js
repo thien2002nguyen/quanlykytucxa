@@ -35,7 +35,10 @@ var userSchema = new mongoose.Schema({
     },
     avatar: {
         filename: String,
-        path: String
+        path: {
+            type: String,
+            default: 'https://th.bing.com/th/id/OIP.0H2FBvCT-goHME7xb5eWEQAAAA?rs=1&pid=ImgDetMain'
+        }
     },
     isBlocked: {
         type: Boolean,

@@ -1,11 +1,21 @@
 const Room = require('../models/room')
+const User = require('../models/user')
+const Admin = require('../models/admin')
 const asyncHandler = require('express-async-handler')
 
 const createRoom = asyncHandler(async (req, res) => {
-    const { numberRoom, numberPeople, price } = req.body
-    if (!numberRoom, !numberPeople, !price) {
-        throw new Error('Missing Inputs')
+    const { _id } = req.user
+    const { numberRoom, max_people, roomprice } = req.body
+    if (!_id) {
+        throw new Error('Missing input')
     }
+    const isAdmin = await Admin.findById(_id)
+    if (!isAdmin) {
+        throw new Error('Not authorized to perform this action')
+    }
+    if (!numberRoom) throw new Error('Missing number room')
+    if (!max_people) throw new Error('Missing max people')
+    if (!roomprice) throw new Error('Missing price')
     if (req.files?.thumb) {
         req.body.thumb = {
             filename: req.files?.thumb[0]?.filename,
@@ -29,15 +39,17 @@ const createRoom = asyncHandler(async (req, res) => {
 
 const getOneRoom = asyncHandler(async (req, res) => {
     const { rid } = req.params
-    const room = await Room.findById(rid).populate('users', 'name classStudy avatar')
+    const room = await Room.findById(rid)
+    const peopleInRoom = await User.find({ roomId: rid }).select('name email phone')
     return res.status(200).json({
         success: room ? true : false,
-        data: room ? room : 'Room not found'
+        data: room ? room : 'Room not found',
+        peopleInRoom,
     })
 })
 
 const getRooms = asyncHandler(async (req, res) => {
-    const data = await Room.find().populate('users', 'name classStudy avatar')
+    const data = await Room.find()
     return res.status(200).json({
         success: data ? true : false,
         data: data ? data : 'Room not found'

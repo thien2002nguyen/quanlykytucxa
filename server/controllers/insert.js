@@ -1,7 +1,8 @@
 const User = require('../models/user')
 const Admin = require('../models/admin')
+const Room = require('../models/room')
 const asyncHandler = require('express-async-handler')
-const { userData, adminData } = require('../data/dataTest')
+const { userData, adminData, roomData } = require('../data/dataTest')
 
 const fnInsertUser = async (user) => {
     await User.create({
@@ -42,7 +43,25 @@ const insertAdmins = asyncHandler(async (req, res) => {
     return res.status(200).json('Done')
 })
 
+const fnInsertRoom = async (room) => {
+    await Room.create({
+        numberRoom: room.numberRoom,
+        max_people: room.max_people,
+        roomprice: room.roomprice,
+    })
+}
+
+const insertRooms = asyncHandler(async (req, res) => {
+    const promises = []
+    for (let room of roomData) {
+        promises.push(fnInsertRoom(room))
+    }
+    await Promise.all(promises)
+    return res.status(200).json('Done')
+})
+
 module.exports = {
     insertUsers,
-    insertAdmins
+    insertAdmins,
+    insertRooms
 }

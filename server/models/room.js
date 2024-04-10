@@ -2,6 +2,10 @@ const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
 var roomSchema = new mongoose.Schema({
+    numberRoom: {
+        type: Number,
+        required: true,
+    },
     max_people: {
         type: Number,
         required: true,
@@ -10,9 +14,16 @@ var roomSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    currentPeople: {
+        type: Number,
+        default: 0
+    },
     thumb: {
         filename: String,
-        path: String
+        path: {
+            type: String,
+            default: 'https://alibabahome.vn/wp-content/uploads/2018/12/ky-tuc-xa-nu.jpg'
+        }
     },
     images: [
         {

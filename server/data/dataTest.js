@@ -98,7 +98,26 @@ const adminData = [
     }
 ]
 
+const roomData = [
+    {
+        numberRoom: 1,
+        max_people: 4,
+        roomprice: 250,
+    },
+    {
+        numberRoom: 2,
+        max_people: 4,
+        roomprice: 250,
+    },
+    {
+        numberRoom: 3,
+        max_people: 6,
+        roomprice: 300,
+    }
+]
+
 module.exports = {
     userData,
-    adminData
+    adminData,
+    roomData
 }

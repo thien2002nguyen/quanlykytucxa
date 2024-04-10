@@ -1,28 +1,25 @@
 const User = require('../models/user')
+const Admin = require('../models/admin')
+const Contact = require('../models/contact')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
 
 const getCurrent = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const user = await User.findById(_id)
-    const room = await Room.findOne({ users: _id }).select('numberRoom')
+    const user = await User.findById(_id).populate('roomId', 'numberRoom')
     return res.status(200).json({
         success: user ? true : false,
         user: user ? user : 'User not found',
-        room: room ? room : 'Room not found'
     })
 })
 
-const updateUser = asyncHandler(async (req, res) => {
+const updateCurrent = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const { name, birthday, address, classStudy, email, phone, password, role } = req.body
+    const { name, birthday, address, classStudy, email, phone, password } = req.body
     if (!_id || Object.keys(req.body).length === 0) {
-        throw new Error('Missing inputs')
+        throw new Error('Nothing changes')
     }
     const data = {}
-    if (role) {
-        throw new Error('Can not update role')
-    }
     if (name) data.name = name
     if (birthday) data.birthday = birthday
     if (address) data.address = address
@@ -48,16 +45,24 @@ const updateUser = asyncHandler(async (req, res) => {
 
 const registerForRoom = asyncHandler(async (req, res) => {
     const { _id } = req.user
+    const { type } = req.body
     const { rid } = req.params
-    if (!_id || !rid) {
+    if (!_id || !rid || !type) {
         throw new Error('Missing input')
     }
-    const findUser = await User.findById(_id)
-    if (findUser.roomId) {
+    const isUser = await User.findById(_id)
+    if (isUser && isUser.roomId) {
         throw new Error('The user has registered for the room')
     }
-    const response = await User.findByIdAndUpdate(_id,
-        { $push: { roomId: rid } }, { new: true })
+    const isRoom = await Room.findOne({ _id: rid })
+    if (!isRoom) {
+        throw new Error(`No such room with id=${rid}`)
+    }
+    const response = await Contact.create({
+        type: type,
+        user_userId: _id,
+        room_roomId: rid,
+    })
     return res.status(200).json({
         success: response ? true : false,
         mes: response ? response : 'Something went wrong'
@@ -65,10 +70,22 @@ const registerForRoom = asyncHandler(async (req, res) => {
 })
 
 const createUser = asyncHandler(async (req, res) => {
-    const { userId, name, brithday, address, classStudy, email } = req.body
-    if (!userId, !name, !brithday, !address, !classStudy, !email) {
-        throw new Error('Missing Inputs')
+    const { _id } = req.user
+    const { userId, name, brithday, address, classStudy, email, password } = req.body
+    if (!_id) {
+        throw new Error('Missing input')
     }
+    const isAdmin = await Admin.findById(_id)
+    if (!isAdmin) {
+        throw new Error('Not authorized to perform this action')
+    }
+    if (!userId) throw new Error('Missing user id')
+    if (!name) throw new Error('Missing name')
+    if (!brithday) throw new Error('Missing birthday')
+    if (!address) throw new Error('Missing address')
+    if (!classStudy) throw new Error('Missing class')
+    if (!email) throw new Error('Missing email')
+    if (!password) throw new Error('Missing password')
     const rs = User.findOne({ userId })
     if (!rs) {
         throw new Error("UserId already exists")
@@ -81,9 +98,14 @@ const createUser = asyncHandler(async (req, res) => {
 })
 
 const deleteUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user
     const { uid } = req.params
-    if (!uid) {
-        throw new Error('Missing inputs')
+    if (!_id || !uid) {
+        throw new Error('Missing input')
+    }
+    const isAdmin = await Admin.findById(_id)
+    if (!isAdmin) {
+        throw new Error('Not authorized to perform this action')
     }
     const response = await User.findByIdAndDelete(uid)
     return res.status(200).json({
@@ -93,6 +115,14 @@ const deleteUser = asyncHandler(async (req, res) => {
 })
 
 const getUsers = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    if (!_id) {
+        throw new Error('Missing input')
+    }
+    const isAdmin = await Admin.findById(_id)
+    if (!isAdmin) {
+        throw new Error('Not authorized to perform this action')
+    }
     const response = await User.find().select('-refreshToken -password')
     return res.status(200).json({
         success: response ? true : false,
@@ -101,9 +131,14 @@ const getUsers = asyncHandler(async (req, res) => {
 })
 
 const updateUserByAdmin = asyncHandler(async (req, res) => {
+    const { _id } = req.user
     const { uid } = req.params
-    if (!uid) {
-        throw new Error('Missing inputs')
+    if (!_id || !uid) {
+        throw new Error('Missing input')
+    }
+    const isAdmin = await Admin.findById(_id)
+    if (!isAdmin) {
+        throw new Error('Not authorized to perform this action')
     }
     const { password } = req.body
     if (password) {
@@ -118,9 +153,9 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-    createUser,
     getCurrent,
-    updateUser,
+    updateCurrent,
+    createUser,
     deleteUser,
     getUsers,
     updateUserByAdmin,
