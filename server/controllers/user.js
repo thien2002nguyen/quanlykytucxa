@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const Admin = require('../models/admin')
+const Room = require('../models/room')
 const Contact = require('../models/contact')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
@@ -54,7 +55,7 @@ const registerForRoom = asyncHandler(async (req, res) => {
     if (isUser && isUser.roomId) {
         throw new Error('The user has registered for the room')
     }
-    const isRoom = await Room.findOne({ _id: rid })
+    const isRoom = await Room.findOne({ '_id': rid })
     if (!isRoom) {
         throw new Error(`No such room with id=${rid}`)
     }

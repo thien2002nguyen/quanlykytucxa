@@ -15,7 +15,11 @@ var serviceSchema = new mongoose.Schema({
         required: true,
     },
     thumb: {
-        type: String,
+        fileName: String,
+        path: {
+            type: String,
+            default: 'https://xaydungvincon.com/Content/Images/FileUpload/2020/9/mau-nha-ve-sinh-dep-sang-trong0.jpg'
+        }
     },
 });
 

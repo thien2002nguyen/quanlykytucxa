@@ -28,7 +28,10 @@ var roomSchema = new mongoose.Schema({
     images: [
         {
             filename: String,
-            path: String
+            path: {
+                type: String,
+                default: 'https://alibabahome.vn/wp-content/uploads/2018/12/ky-tuc-xa-nu.jpg'
+            }
         }
     ],
     description: {

@@ -2,6 +2,7 @@ const Room = require('../models/room')
 const User = require('../models/user')
 const Admin = require('../models/admin')
 const asyncHandler = require('express-async-handler')
+const RoomService = require('../models/roomService')
 
 const createRoom = asyncHandler(async (req, res) => {
     const { _id } = req.user
@@ -41,10 +42,12 @@ const getOneRoom = asyncHandler(async (req, res) => {
     const { rid } = req.params
     const room = await Room.findById(rid)
     const peopleInRoom = await User.find({ roomId: rid }).select('name email phone')
+    const services = await RoomService.find({ room_idRoom: rid }).populate('service_idService', 'name price description thumb')
     return res.status(200).json({
         success: room ? true : false,
         data: room ? room : 'Room not found',
         peopleInRoom,
+        services
     })
 })
 
