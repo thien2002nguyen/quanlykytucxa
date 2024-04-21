@@ -10,5 +10,6 @@ router.post('/manage', verifyAccessToken, ctrls.createUser)
 router.put('/manage/:uid', verifyAccessToken, ctrls.updateUserByAdmin)
 router.put('/room/:rid', verifyAccessToken, ctrls.registerForRoom)
 router.delete('/manage/:uid', verifyAccessToken, ctrls.deleteUser)
+router.get('/manage/one/:uid', verifyAccessToken, ctrls.getOneUser)
 
 module.exports = router

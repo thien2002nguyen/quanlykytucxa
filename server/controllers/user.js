@@ -115,6 +115,21 @@ const deleteUser = asyncHandler(async (req, res) => {
     })
 })
 
+const getOneUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const { uid } = req.params
+    if (!uid) throw new Error('Missing id user')
+    const isAdmin = await Admin.findById(_id)
+    if (!isAdmin) {
+        throw new Error('Not authorized to perform this action')
+    }
+    const response = await User.findOne({ _id: uid })
+    return res.status(200).json({
+        success: response ? true : false,
+        rs: response ? response : 'User not found'
+    })
+})
+
 const getUsers = asyncHandler(async (req, res) => {
     const { _id } = req.user
     if (!_id) {
@@ -157,6 +172,7 @@ module.exports = {
     getCurrent,
     updateCurrent,
     createUser,
+    getOneUser,
     deleteUser,
     getUsers,
     updateUserByAdmin,
