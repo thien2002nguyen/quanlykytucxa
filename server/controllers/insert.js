@@ -54,6 +54,7 @@ const fnInsertRoom = async (room) => {
     numberRoom: room.numberRoom,
     max_people: room.max_people,
     roomprice: room.roomprice,
+    description: room.description,
   });
 };
 

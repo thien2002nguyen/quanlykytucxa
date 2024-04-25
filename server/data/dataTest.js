@@ -103,16 +103,61 @@ const roomData = [
     numberRoom: 1,
     max_people: 4,
     roomprice: 250,
+    description: "Phòng tiện nghi với view đẹp",
   },
   {
     numberRoom: 2,
     max_people: 4,
     roomprice: 250,
+    description: "Phòng sang trọng với đầy đủ tiện nghi",
   },
   {
     numberRoom: 3,
     max_people: 6,
     roomprice: 300,
+    description: "Phòng thoáng đãng, yên tĩnh",
+  },
+  {
+    numberRoom: 4,
+    max_people: 3,
+    roomprice: 280,
+    description: "Phòng hiện đại, trang bị đầy đủ",
+  },
+  {
+    numberRoom: 5,
+    max_people: 5,
+    roomprice: 320,
+    description: "Phòng ấm cúng, view đẹp",
+  },
+  {
+    numberRoom: 6,
+    max_people: 4,
+    roomprice: 270,
+    description: "Phòng lãng mạn cho cặp đôi",
+  },
+  {
+    numberRoom: 7,
+    max_people: 6,
+    roomprice: 290,
+    description: "Phòng đầy đủ dịch vụ tiện ích",
+  },
+  {
+    numberRoom: 8,
+    max_people: 5,
+    roomprice: 260,
+    description: "Phòng thoải mái, tiện nghi",
+  },
+  {
+    numberRoom: 9,
+    max_people: 4,
+    roomprice: 240,
+    description: "Phòng tại khu vực trung tâm",
+  },
+  {
+    numberRoom: 10,
+    max_people: 3,
+    roomprice: 230,
+    description: "Phòng rộng rãi phù hợp cho gia đình",
   },
 ];
 
@@ -131,6 +176,16 @@ const serviceData = [
     name: "Dịch vụ C",
     price: 200,
     description: "Mô tả dịch vụ C",
+  },
+  {
+    name: "Dịch vụ D",
+    price: 120,
+    description: "Mô tả dịch vụ D",
+  },
+  {
+    name: "Dịch vụ E",
+    price: 180,
+    description: "Mô tả dịch vụ E",
   },
 ];
 
